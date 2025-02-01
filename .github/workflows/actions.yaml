@@ -1,0 +1,51 @@
+name: Scraping Automation
+
+on:
+  schedule:
+    - cron: '50 22 */2 * *'  # Runs every 2 days at 22:30 UTC
+  workflow_dispatch:  # Allow manual triggers from the GitHub UI
+
+permissions:
+  contents: write  # Allow the workflow to commit changes to the repository
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # Use the latest Ubuntu environment
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3  
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'  # Specify the Python version to use
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt  # Ensure all dependencies in requirements.txt are installed
+
+      - name: Install Google Chrome
+        run: |
+          sudo apt update
+          sudo apt install -y google-chrome-stable  # Install Google Chrome if needed for scraping
+
+      - name: Run scraping script
+        env:
+          MY_SECRET_TOKEN: ${{ secrets.MY_SECRET_TOKEN }}  
+        run: |
+          python main.py  # This will run your main script that triggers all the category scraping scripts
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "brahimchakir"  # Replace with your GitHub username
+          git config --global user.email "ibrahimchakir002@gmail.com"  # Replace with your email
+          git add -A  # Add all modified files (including the new CSV output)
+          git diff-index --quiet HEAD || git commit -m "Updated Scraped Data" --allow-empty  # Commit if any changes
+
+      - name: Push changes
+        uses: ad-m/github-push-action@v0.6.0  # Push the changes to GitHub
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}  # Use the GitHub token to push to the repository
+          branch: main  # The branch where the data will be pushed
