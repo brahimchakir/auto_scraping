@@ -3,6 +3,7 @@ import csv
 import traceback
 import asyncio
 import os
+import random
 from lxml import html
 from datetime import datetime
 from RotateUserAgent import RotateUserAgent  
@@ -12,7 +13,7 @@ TARGET_HREFS = 100
 os.makedirs("DATA", exist_ok=True)
 
 headers = {
-    "user-agent": "Mozilla/5.0 (Linux; Android 9; AFTWMST22 Build/PS7233; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/88.0.4324.152 Mobile Safari/537.36",
+    "user-agent": "Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)",
     "accept-language": "en-GB,en;q=0.7",
     "origin": "https://www.amazon.com",
     "referer": "https://www.amazon.com/",
@@ -58,12 +59,19 @@ async def save_product_to_csv(product_dict, filename):
             writer.writeheader()
         writer.writerow(product_dict)
 
-async def send_request(url: str, session: httpx.AsyncClient):
+async def send_request(url: str, session: httpx.AsyncClient, retries: int = 3):
     #headers = get_dynamic_headers()
     try:
         response = await session.get(url, headers=headers, timeout=30.0)
         response.raise_for_status()
         return response
+    except httpx.HTTPStatusError as e:
+        if e.response.status_code == 503 and retries > 0:
+            print(f"503 error for {url}, retrying in 5 seconds...")
+              # Sleep for a few seconds before retrying
+            return await send_request(url, session, retries - 1)
+        print(f"Error fetching {url}: {str(e)}")
+        return None
     except Exception as e:
         print(f"Error fetching {url}: {str(e)}")
         return None
@@ -95,6 +103,7 @@ async def get_products_links(session: httpx.AsyncClient, product_name: str):
             link = product.xpath(".//a[@class='a-link-normal s-no-outline']/@href")
             if link:
                 links.append(f"https://www.amazon.com{link[0]}")
+        await asyncio.sleep(random.uniform(2, 5))
         
     return links
 
