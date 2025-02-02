@@ -7,7 +7,7 @@ from lxml import html
 from datetime import datetime
 from RotateUserAgent import RotateUserAgent  
 
-TARGET_HREFS = 600
+TARGET_HREFS = 100
 # Ensure the DATA folder exists
 os.makedirs("DATA", exist_ok=True)
 
@@ -74,8 +74,8 @@ def price_to_float(price_element):
 async def get_products_links(session: httpx.AsyncClient, product_name: str):
     base_url = "https://www.amazon.com/s?k="
     links = []
-    page=1
-    while len(links)<TARGET_HREFS: 
+    
+    for page in range(TARGET_HREFS) :
         url = f"{base_url}{product_name}&page={page+1}"
         response = await send_request(url, session)
         if not response:
@@ -88,7 +88,7 @@ async def get_products_links(session: httpx.AsyncClient, product_name: str):
             link = product.xpath(".//a[@class='a-link-normal s-no-outline']/@href")
             if link:
                 links.append(f"https://www.amazon.com{link[0]}")
-        page+=1
+        
     return links
 
 async def get_product_details(session: httpx.AsyncClient, link: str, sem: asyncio.Semaphore):
