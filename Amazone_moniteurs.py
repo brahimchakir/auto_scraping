@@ -13,7 +13,7 @@ TARGET_HREFS = 100
 os.makedirs("DATA", exist_ok=True)
 
 headers = {
-    "user-agent": "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.111 Safari/537.36",
+    "user-agent": "Mozilla/5.0 (Linux; Android 5.1; AFTS Build/LMY47O) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/41.99900.2250.0242 Safari/537.36",
     "accept-language": "en-GB,en;q=0.7",
     "origin": "https://www.amazon.com",
     "referer": "https://www.amazon.com/",

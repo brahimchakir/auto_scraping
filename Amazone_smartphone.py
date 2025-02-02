@@ -13,7 +13,7 @@ TARGET_HREFS = 100
 os.makedirs("DATA", exist_ok=True)
 
 headers = {
-    "user-agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:15.0) Gecko/20100101 Firefox/15.0.1",
+    "user-agent": "Dalvik/2.1.0 (Linux; U; Android 6.0.1; Nexus Player Build/MMB29T)",
     "accept-language": "en-GB,en;q=0.7",
     "origin": "https://www.amazon.com",
     "referer": "https://www.amazon.com/",
