@@ -9,6 +9,15 @@ from RotateUserAgent import RotateUserAgent
 
 TARGET_HREFS = 100
 
+# Ensure the DATA folder exists
+os.makedirs("DATA", exist_ok=True)
+
+headers = {
+    "user-agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:15.0) Gecko/20100101 Firefox/15.0.1",
+    "accept-language": "en-GB,en;q=0.7",
+    "origin": "https://www.amazon.com",
+    "referer": "https://www.amazon.com/",
+}
 # Ensure the user agents are loaded
 RotateUserAgent.load_user_agents()
 
@@ -48,7 +57,7 @@ async def save_product_to_csv(product_dict, filename):
         writer.writerow(product_dict)
 
 async def send_request(url: str, session: httpx.AsyncClient):
-    headers = get_dynamic_headers()
+    #headers = get_dynamic_headers()
     try:
         response = await session.get(url, headers=headers, timeout=30.0)
         response.raise_for_status()

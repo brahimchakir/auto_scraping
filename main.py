@@ -7,6 +7,7 @@ from Amazon_ordinateurs import main as main_category2
 from Amazone_moniteurs import main as main_category3
 from Amazone_smartphone import main as main_category4
 
+
 try:
     MY_SECRET_TOKEN = os.environ["MY_SECRET_TOKEN"]
 except KeyError:
