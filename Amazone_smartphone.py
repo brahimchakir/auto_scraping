@@ -126,7 +126,7 @@ async def get_product_details(session: httpx.AsyncClient, link: str, sem: asynci
             return None
 
 async def main():
-    sem = asyncio.Semaphore(5)  # 5 requêtes simultanées max
+    sem = asyncio.Semaphore(2)  # 5 requêtes simultanées max
     
     async with httpx.AsyncClient() as session:
         try:

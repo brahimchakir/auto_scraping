@@ -15,12 +15,11 @@ except KeyError:
 async def run_all_scrapers():
     # Run all the scrapers one by one
     print("Starting all scrapers...")
-    await asyncio.gather(
-        main_category1(),
-        main_category2(),
-        main_category3(),
-        main_category4()
-    )
+    await main_category1()
+    await main_category2()
+    await main_category3()
+    await main_category4()
+
 
 if __name__ == "__main__":
     asyncio.run(run_all_scrapers())
