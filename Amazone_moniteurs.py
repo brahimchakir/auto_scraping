@@ -8,14 +8,16 @@ from lxml import html
 from datetime import datetime
 from RotateUserAgent import RotateUserAgent  
 
-TARGET_HREFS = 100
+TARGET_HREFS = 30
 
 # Ensure the DATA folder exists
 os.makedirs("DATA", exist_ok=True)
 
 headers = {
-    "user-agent": "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)",
-    "accept-language": "en-GB,en;q=0.7",
+    "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.5060.114 Safari/537.36",
+    "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "accept-encoding": "gzip, deflate, br",
+    "accept-language": "en-US,en;q=0.9",
     "origin": "https://www.amazon.com",
     "referer": "https://www.amazon.com/",
 }
@@ -109,6 +111,8 @@ async def get_products_links(session: httpx.AsyncClient, product_name: str):
 
 async def get_product_details(session: httpx.AsyncClient, link: str, sem: asyncio.Semaphore):
     async with sem:  # Contrôle de concurrence
+        await asyncio.sleep(random.uniform(2, 5))
+
         response = await send_request(link, session)
         if not response:
             return None
